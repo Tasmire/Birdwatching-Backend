@@ -1,0 +1,60 @@
+﻿@model Final_Project_Backend.Models.SpawnLocations
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>SpawnLocations</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SpawnType)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SpawnType)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.XCoordinate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.XCoordinate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.YCoordinate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.YCoordinate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ZCoordinate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ZCoordinate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Animal)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Animal.AnimalId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EnvironmentId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EnvironmentId)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.SpawnLocationId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

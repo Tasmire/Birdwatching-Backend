@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Final_Project_Backend.Models.SpawnLocations>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SpawnType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.XCoordinate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.YCoordinate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ZCoordinate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Animal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EnvironmentId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SpawnType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.XCoordinate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.YCoordinate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ZCoordinate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Animal.AnimalId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EnvironmentId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.SpawnLocationId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.SpawnLocationId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.SpawnLocationId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
