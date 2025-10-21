@@ -31,7 +31,7 @@
                 @Html.DisplayNameFor(model => model.Animal)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EnvironmentId)
+                @Html.DisplayNameFor(model => model.Environment)
             </th>
             <th></th>
         </tr>
@@ -55,10 +55,10 @@
                 @Html.DisplayFor(modelItem => item.ZCoordinate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Animal.AnimalId)
+                @Html.DisplayFor(modelItem => item.Animal.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EnvironmentId)
+                @Html.DisplayFor(modelItem => item.Environment.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.SpawnLocationId">Edit</a> |

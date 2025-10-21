@@ -8,6 +8,8 @@ namespace Final_Project_Backend.Models
         public Guid AchievementId { get; set; }
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;
+
+        [Display(Name = "Icon URL")]
         public string IconUrl { get; set; } = null!;
     }
 }

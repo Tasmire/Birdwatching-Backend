@@ -22,7 +22,7 @@ namespace Final_Project_Backend.Controllers
         // GET: SpawnLocations
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.SpawnLocations.Include(s => s.Animal);
+            var applicationDbContext = _context.SpawnLocations.Include(s => s.Animal).Include(s => s.Environment);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -36,6 +36,7 @@ namespace Final_Project_Backend.Controllers
 
             var spawnLocations = await _context.SpawnLocations
                 .Include(s => s.Animal)
+                .Include(s => s.Environment)
                 .FirstOrDefaultAsync(m => m.SpawnLocationId == id);
             if (spawnLocations == null)
             {
@@ -48,7 +49,8 @@ namespace Final_Project_Backend.Controllers
         // GET: SpawnLocations/Create
         public IActionResult Create()
         {
-            ViewData["AnimalId"] = new SelectList(_context.Animals, "AnimalId", "AnimalId");
+            ViewData["AnimalId"] = new SelectList(_context.Animals, "AnimalId", "Name");
+            ViewData["EnvironmentId"] = new SelectList(_context.Environments, "EnvironmentId", "Name");
             return View();
         }
 
@@ -67,6 +69,7 @@ namespace Final_Project_Backend.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AnimalId"] = new SelectList(_context.Animals, "AnimalId", "AnimalId", spawnLocations.AnimalId);
+            ViewData["EnvironmentId"] = new SelectList(_context.Environments, "EnvironmentId", "EnvironmentId", spawnLocations.EnvironmentId);
             return View(spawnLocations);
         }
 
@@ -83,7 +86,8 @@ namespace Final_Project_Backend.Controllers
             {
                 return NotFound();
             }
-            ViewData["AnimalId"] = new SelectList(_context.Animals, "AnimalId", "AnimalId", spawnLocations.AnimalId);
+            ViewData["AnimalId"] = new SelectList(_context.Animals, "AnimalId", "Name", spawnLocations.AnimalId);
+            ViewData["EnvironmentId"] = new SelectList(_context.Environments, "EnvironmentId", "Name", spawnLocations.EnvironmentId);
             return View(spawnLocations);
         }
 
@@ -120,6 +124,7 @@ namespace Final_Project_Backend.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AnimalId"] = new SelectList(_context.Animals, "AnimalId", "AnimalId", spawnLocations.AnimalId);
+            ViewData["EnvironmentId"] = new SelectList(_context.Environments, "EnvironmentId", "EnvironmentId", spawnLocations.EnvironmentId);
             return View(spawnLocations);
         }
 
@@ -133,6 +138,7 @@ namespace Final_Project_Backend.Controllers
 
             var spawnLocations = await _context.SpawnLocations
                 .Include(s => s.Animal)
+                .Include(s => s.Environment)
                 .FirstOrDefaultAsync(m => m.SpawnLocationId == id);
             if (spawnLocations == null)
             {

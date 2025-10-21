@@ -45,7 +45,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="EnvironmentId" class="control-label"></label>
-                <input asp-for="EnvironmentId" class="form-control" />
+                <select asp-for="EnvironmentId" class="form-control" asp-items="ViewBag.EnvironmentId"></select>
                 <span asp-validation-for="EnvironmentId" class="text-danger"></span>
             </div>
             <div class="form-group">

@@ -48,7 +48,7 @@ namespace Final_Project_Backend.Controllers
         // GET: Animals/Create
         public IActionResult Create()
         {
-            ViewData["EnvironmentId"] = new SelectList(_context.Environments, "EnvironmentId", "EnvironmentId");
+            ViewData["EnvironmentId"] = new SelectList(_context.Environments, "EnvironmentId", "Name");
             return View();
         }
 
@@ -83,7 +83,7 @@ namespace Final_Project_Backend.Controllers
             {
                 return NotFound();
             }
-            ViewData["EnvironmentId"] = new SelectList(_context.Environments, "EnvironmentId", "EnvironmentId", animals.EnvironmentId);
+            ViewData["EnvironmentId"] = new SelectList(_context.Environments, "EnvironmentId", "Name", animals.EnvironmentId);
             return View(animals);
         }
 

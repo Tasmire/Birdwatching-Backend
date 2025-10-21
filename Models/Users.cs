@@ -8,6 +8,8 @@ namespace Final_Project_Backend.Models
         public Guid UserId { get; set; }
         public string Username { get; set; } = null!;
         public string Email { get; set; } = null!;
+
+        [Display(Name = "Password Hash")]
         public string PasswordHash { get; set; } = null!;
     }
 }
