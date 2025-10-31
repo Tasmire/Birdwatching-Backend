@@ -66,7 +66,7 @@ namespace Final_Project_Backend.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EnvironmentId"] = new SelectList(_context.Environments, "EnvironmentId", "EnvironmentId", animals.EnvironmentId);
+            ViewData["EnvironmentId"] = new SelectList(_context.Environments, "EnvironmentId", "Name", animals.EnvironmentId);
             return View(animals);
         }
 
@@ -119,7 +119,7 @@ namespace Final_Project_Backend.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EnvironmentId"] = new SelectList(_context.Environments, "EnvironmentId", "EnvironmentId", animals.EnvironmentId);
+            ViewData["EnvironmentId"] = new SelectList(_context.Environments, "EnvironmentId", "Name", animals.EnvironmentId);
             return View(animals);
         }
 

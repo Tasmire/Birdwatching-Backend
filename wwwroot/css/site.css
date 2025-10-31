@@ -29,3 +29,21 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+.homepage-main-content {
+    display: flex;
+
+}
+
+.navigation-section-item {
+    width: 500px;
+    height: 150px;
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+}
+
+.navigation-section-text {
+    text-align: left;
+    margin-top: 20px;
+}

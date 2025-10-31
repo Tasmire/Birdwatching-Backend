@@ -6,7 +6,7 @@ namespace Final_Project_Backend.Models
     {
         [Key]
         public Guid SpawnLocationId { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [Display(Name = "Spawn Type")]
         public string SpawnType { get; set; } = null!;
@@ -20,8 +20,8 @@ namespace Final_Project_Backend.Models
         [Display(Name = "Z Coordinate")]
         public float ZCoordinate { get; set; }
         public Guid AnimalId { get; set; }
-        public Animals Animal { get; set; }
+        public Animals Animal { get; set; } = null!;
         public Guid EnvironmentId { get; set; }
-        public Environments Environment { get; set; }
+        public Environments Environment { get; set; } = null!;
     }
 }
