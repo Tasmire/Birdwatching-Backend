@@ -88,6 +88,40 @@ body {
     color: #112C09 !important;
 }
 
+.custom-table th {
+    background-color: #112C09;
+    color: #C1CABE;
+}
+
+.custom-table tbody tr:nth-child(odd) td {
+    background-color: #CDD7CA;
+    color: #112C09;
+}
+
+.custom-table tbody tr:nth-child(even) td {
+    background-color: #ACC2A6;
+    color: #112C09;
+}
+
+.custom-table tbody td a {
+    color: #112C09;
+}
+
+.create-link {
+    color: #112C09;
+}
+
+.crud-page-title {
+    margin-top: 50px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.crud-page-subtitle {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
 .footer {
     background-color: #4A5348;
 }
