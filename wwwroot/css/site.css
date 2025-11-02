@@ -18,7 +18,14 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+  font-family: "Inclusive Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  background-color: #C1CABE;
+  min-height: 100vh;
+  margin: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -32,7 +39,28 @@ body {
 
 .homepage-main-content {
     display: flex;
+    justify-content: space-evenly;
+}
 
+.navbar {
+    background-color: #112C09;
+}
+
+.navbar a {
+
+}
+
+.page-title {
+    margin-top: 50px;
+    font-weight: 400;
+}
+
+.page-subtitle {
+    margin-top: 10px;
+}
+
+.homepage-main-content {
+    margin-top: 75px;
 }
 
 .navigation-section-item {
@@ -45,5 +73,25 @@ body {
 
 .navigation-section-text {
     text-align: left;
+    margin-top: 20px;
+}
+
+.navigation-section-text a {
+    text-decoration: none;
+}
+
+.text-light {
+    color: #C1CABE !important;
+}
+
+.text-dark {
+    color: #112C09 !important;
+}
+
+.footer {
+    background-color: #4A5348;
+}
+
+.footer p {
     margin-top: 20px;
 }
