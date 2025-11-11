@@ -16,9 +16,7 @@ namespace Final_Project_Backend.Models
 
         [Display(Name = "Y Coordinate")]
         public float YCoordinate { get; set; }
-
-        [Display(Name = "Z Coordinate")]
-        public float ZCoordinate { get; set; }
+        public float Scale { get; set; }
         public Guid AnimalId { get; set; }
         public Animals Animal { get; set; } = null!;
         public Guid EnvironmentId { get; set; }

@@ -15,5 +15,17 @@ namespace Final_Project_Backend.Data
         public DbSet<Final_Project_Backend.Models.Environments> Environments { get; set; } = default!;
         public DbSet<Final_Project_Backend.Models.Achievements> Achievements { get; set; } = default!;
         public DbSet<Final_Project_Backend.Models.SpawnLocations> SpawnLocations { get; set; } = default!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Prevent cascading delete from Environment -> SpawnLocations (avoid multiple cascade paths).
+            modelBuilder.Entity<SpawnLocations>()
+                .HasOne(s => s.Environment)
+                .WithMany() // if Environments has a collection property use that instead
+                .HasForeignKey(s => s.EnvironmentId)
+                .OnDelete(DeleteBehavior.NoAction);
+        }
     }
 }

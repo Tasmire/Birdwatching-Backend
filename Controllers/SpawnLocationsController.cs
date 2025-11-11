@@ -59,7 +59,7 @@ namespace Final_Project_Backend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SpawnLocationId,Name,SpawnType,XCoordinate,YCoordinate,ZCoordinate,AnimalId,EnvironmentId")] SpawnLocations spawnLocations)
+        public async Task<IActionResult> Create([Bind("SpawnLocationId,Name,SpawnType,XCoordinate,YCoordinate,Scale,AnimalId,EnvironmentId")] SpawnLocations spawnLocations)
         {
             if (ModelState.IsValid)
             {
@@ -96,7 +96,7 @@ namespace Final_Project_Backend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("SpawnLocationId,Name,SpawnType,XCoordinate,YCoordinate,ZCoordinate,AnimalId,EnvironmentId")] SpawnLocations spawnLocations)
+        public async Task<IActionResult> Edit(Guid id, [Bind("SpawnLocationId,Name,SpawnType,XCoordinate,YCoordinate,Scale,AnimalId,EnvironmentId")] SpawnLocations spawnLocations)
         {
             if (id != spawnLocations.SpawnLocationId)
             {
