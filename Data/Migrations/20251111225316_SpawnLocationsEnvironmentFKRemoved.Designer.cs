@@ -4,6 +4,7 @@ using Final_Project_Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Final_Project_Backend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251111225316_SpawnLocationsEnvironmentFKRemoved")]
+    partial class SpawnLocationsEnvironmentFKRemoved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +43,7 @@ namespace Final_Project_Backend.Data.Migrations
 
                     b.HasKey("AchievementId");
 
-                    b.ToTable("Achievements", (string)null);
+                    b.ToTable("Achievements");
                 });
 
             modelBuilder.Entity("Final_Project_Backend.Models.Animals", b =>
@@ -81,7 +84,7 @@ namespace Final_Project_Backend.Data.Migrations
 
                     b.HasIndex("EnvironmentId");
 
-                    b.ToTable("Animals", (string)null);
+                    b.ToTable("Animals");
                 });
 
             modelBuilder.Entity("Final_Project_Backend.Models.Environments", b =>
@@ -102,7 +105,7 @@ namespace Final_Project_Backend.Data.Migrations
 
                     b.HasKey("EnvironmentId");
 
-                    b.ToTable("Environments", (string)null);
+                    b.ToTable("Environments");
                 });
 
             modelBuilder.Entity("Final_Project_Backend.Models.SpawnLocations", b =>
@@ -135,111 +138,7 @@ namespace Final_Project_Backend.Data.Migrations
 
                     b.HasIndex("AnimalId");
 
-                    b.ToTable("SpawnLocations", (string)null);
-                });
-
-            modelBuilder.Entity("Final_Project_Backend.Models.UserAchievements", b =>
-                {
-                    b.Property<Guid>("UserAchievementId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AchievementId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DateAchieved")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserAchievementId");
-
-                    b.HasIndex("AchievementId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserAchievements", (string)null);
-                });
-
-            modelBuilder.Entity("Final_Project_Backend.Models.UserAnimalInfoUnlocked", b =>
-                {
-                    b.Property<Guid>("UnlockId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AnimalId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("InfoType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsUnlocked")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UnlockId");
-
-                    b.HasIndex("AnimalId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserAnimalInfoUnlocked", (string)null);
-                });
-
-            modelBuilder.Entity("Final_Project_Backend.Models.UserAnimalPhotos", b =>
-                {
-                    b.Property<Guid>("UserAnimalPhotoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AnimalId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DateUploaded")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PhotoUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserAnimalPhotoId");
-
-                    b.HasIndex("AnimalId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserAnimalPhotos", (string)null);
-                });
-
-            modelBuilder.Entity("Final_Project_Backend.Models.UserAnimals", b =>
-                {
-                    b.Property<Guid>("UserAnimalId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AnimalId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("TimesSpotted")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserAnimalId");
-
-                    b.HasIndex("AnimalId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserAnimals", (string)null);
+                    b.ToTable("SpawnLocations");
                 });
 
             modelBuilder.Entity("Final_Project_Backend.Models.Users", b =>
@@ -262,7 +161,7 @@ namespace Final_Project_Backend.Data.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -487,82 +386,6 @@ namespace Final_Project_Backend.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Animal");
-                });
-
-            modelBuilder.Entity("Final_Project_Backend.Models.UserAchievements", b =>
-                {
-                    b.HasOne("Final_Project_Backend.Models.Achievements", "Achievement")
-                        .WithMany()
-                        .HasForeignKey("AchievementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Final_Project_Backend.Models.Users", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Achievement");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Final_Project_Backend.Models.UserAnimalInfoUnlocked", b =>
-                {
-                    b.HasOne("Final_Project_Backend.Models.Animals", "Animal")
-                        .WithMany()
-                        .HasForeignKey("AnimalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Final_Project_Backend.Models.Users", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Animal");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Final_Project_Backend.Models.UserAnimalPhotos", b =>
-                {
-                    b.HasOne("Final_Project_Backend.Models.Animals", "Animal")
-                        .WithMany()
-                        .HasForeignKey("AnimalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Final_Project_Backend.Models.Users", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Animal");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Final_Project_Backend.Models.UserAnimals", b =>
-                {
-                    b.HasOne("Final_Project_Backend.Models.Animals", "Animal")
-                        .WithMany()
-                        .HasForeignKey("AnimalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Final_Project_Backend.Models.Users", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Animal");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

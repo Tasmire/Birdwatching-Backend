@@ -18,8 +18,6 @@ namespace Final_Project_Backend.Models
         public float YCoordinate { get; set; }
         public float Scale { get; set; }
         public Guid AnimalId { get; set; }
-        public Animals Animal { get; set; } = null!;
-        public Guid EnvironmentId { get; set; }
-        public Environments Environment { get; set; } = null!;
+        public Animals? Animal { get; set; } 
     }
 }

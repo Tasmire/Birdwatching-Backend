@@ -4,6 +4,7 @@ using Final_Project_Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Final_Project_Backend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251112092756_AddJoinTables")]
+    partial class AddJoinTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +43,7 @@ namespace Final_Project_Backend.Data.Migrations
 
                     b.HasKey("AchievementId");
 
-                    b.ToTable("Achievements", (string)null);
+                    b.ToTable("Achievements");
                 });
 
             modelBuilder.Entity("Final_Project_Backend.Models.Animals", b =>
@@ -81,7 +84,7 @@ namespace Final_Project_Backend.Data.Migrations
 
                     b.HasIndex("EnvironmentId");
 
-                    b.ToTable("Animals", (string)null);
+                    b.ToTable("Animals");
                 });
 
             modelBuilder.Entity("Final_Project_Backend.Models.Environments", b =>
@@ -102,7 +105,7 @@ namespace Final_Project_Backend.Data.Migrations
 
                     b.HasKey("EnvironmentId");
 
-                    b.ToTable("Environments", (string)null);
+                    b.ToTable("Environments");
                 });
 
             modelBuilder.Entity("Final_Project_Backend.Models.SpawnLocations", b =>
@@ -135,7 +138,7 @@ namespace Final_Project_Backend.Data.Migrations
 
                     b.HasIndex("AnimalId");
 
-                    b.ToTable("SpawnLocations", (string)null);
+                    b.ToTable("SpawnLocations");
                 });
 
             modelBuilder.Entity("Final_Project_Backend.Models.UserAchievements", b =>
@@ -159,7 +162,7 @@ namespace Final_Project_Backend.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserAchievements", (string)null);
+                    b.ToTable("UserAchievements");
                 });
 
             modelBuilder.Entity("Final_Project_Backend.Models.UserAnimalInfoUnlocked", b =>
@@ -187,7 +190,7 @@ namespace Final_Project_Backend.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserAnimalInfoUnlocked", (string)null);
+                    b.ToTable("UserAnimalInfoUnlocked");
                 });
 
             modelBuilder.Entity("Final_Project_Backend.Models.UserAnimalPhotos", b =>
@@ -215,7 +218,7 @@ namespace Final_Project_Backend.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserAnimalPhotos", (string)null);
+                    b.ToTable("UserAnimalPhotos");
                 });
 
             modelBuilder.Entity("Final_Project_Backend.Models.UserAnimals", b =>
@@ -239,7 +242,7 @@ namespace Final_Project_Backend.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserAnimals", (string)null);
+                    b.ToTable("UserAnimals");
                 });
 
             modelBuilder.Entity("Final_Project_Backend.Models.Users", b =>
@@ -262,7 +265,7 @@ namespace Final_Project_Backend.Data.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

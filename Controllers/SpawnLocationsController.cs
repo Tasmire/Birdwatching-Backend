@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Final_Project_Backend.Data;
 using Final_Project_Backend.Models;
+using System.Diagnostics;
 
 namespace Final_Project_Backend.Controllers
 {
@@ -22,26 +23,22 @@ namespace Final_Project_Backend.Controllers
         // GET: SpawnLocations
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.SpawnLocations.Include(s => s.Animal).Include(s => s.Environment);
+            var applicationDbContext = _context.SpawnLocations
+                .Include(s => s.Animal)
+                .ThenInclude(a => a.Environment);
             return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: SpawnLocations/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var spawnLocations = await _context.SpawnLocations
                 .Include(s => s.Animal)
-                .Include(s => s.Environment)
+                .ThenInclude(a => a.Environment)
                 .FirstOrDefaultAsync(m => m.SpawnLocationId == id);
-            if (spawnLocations == null)
-            {
-                return NotFound();
-            }
+            if (spawnLocations == null) return NotFound();
 
             return View(spawnLocations);
         }
@@ -50,58 +47,65 @@ namespace Final_Project_Backend.Controllers
         public IActionResult Create()
         {
             ViewData["AnimalId"] = new SelectList(_context.Animals, "AnimalId", "Name");
-            ViewData["EnvironmentId"] = new SelectList(_context.Environments, "EnvironmentId", "Name");
             return View();
         }
 
         // POST: SpawnLocations/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SpawnLocationId,Name,SpawnType,XCoordinate,YCoordinate,Scale,AnimalId,EnvironmentId")] SpawnLocations spawnLocations)
+        public async Task<IActionResult> Create([Bind("SpawnLocationId,Name,SpawnType,XCoordinate,YCoordinate,Scale,AnimalId")] SpawnLocations spawnLocations)
         {
             if (ModelState.IsValid)
             {
-                spawnLocations.SpawnLocationId = Guid.NewGuid();
-                _context.Add(spawnLocations);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    spawnLocations.SpawnLocationId = Guid.NewGuid();
+                    _context.Add(spawnLocations);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("SaveChanges error: " + ex.Message);
+                    ModelState.AddModelError("", "Error saving to database: " + ex.Message);
+                }
             }
-            ViewData["AnimalId"] = new SelectList(_context.Animals, "AnimalId", "AnimalId", spawnLocations.AnimalId);
-            ViewData["EnvironmentId"] = new SelectList(_context.Environments, "EnvironmentId", "EnvironmentId", spawnLocations.EnvironmentId);
+
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                         .Select(e => string.IsNullOrEmpty(e.ErrorMessage) ? (e.Exception?.Message ?? "unknown") : e.ErrorMessage)
+                                         .ToList();
+
+            if (errors.Any())
+            {
+                var combined = string.Join(" | ", errors);
+                Debug.WriteLine("ModelState errors: " + combined);
+                ModelState.AddModelError("", combined);
+            }
+
+            // repopulate select lists
+            ViewData["AnimalId"] = new SelectList(_context.Animals, "AnimalId", "Name", spawnLocations?.AnimalId);
             return View(spawnLocations);
         }
 
         // GET: SpawnLocations/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var spawnLocations = await _context.SpawnLocations.FindAsync(id);
-            if (spawnLocations == null)
-            {
-                return NotFound();
-            }
+            if (spawnLocations == null) return NotFound();
+
             ViewData["AnimalId"] = new SelectList(_context.Animals, "AnimalId", "Name", spawnLocations.AnimalId);
-            ViewData["EnvironmentId"] = new SelectList(_context.Environments, "EnvironmentId", "Name", spawnLocations.EnvironmentId);
             return View(spawnLocations);
         }
 
         // POST: SpawnLocations/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("SpawnLocationId,Name,SpawnType,XCoordinate,YCoordinate,Scale,AnimalId,EnvironmentId")] SpawnLocations spawnLocations)
+        public async Task<IActionResult> Edit(Guid id, [Bind("SpawnLocationId,Name,SpawnType,XCoordinate,YCoordinate,Scale,AnimalId")] SpawnLocations spawnLocations)
         {
-            if (id != spawnLocations.SpawnLocationId)
-            {
-                return NotFound();
-            }
+            if (id != spawnLocations.SpawnLocationId) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -109,41 +113,34 @@ namespace Final_Project_Backend.Controllers
                 {
                     _context.Update(spawnLocations);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SpawnLocationsExists(spawnLocations.SpawnLocationId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!SpawnLocationsExists(spawnLocations.SpawnLocationId)) return NotFound();
+                    else throw;
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["AnimalId"] = new SelectList(_context.Animals, "AnimalId", "AnimalId", spawnLocations.AnimalId);
-            ViewData["EnvironmentId"] = new SelectList(_context.Environments, "EnvironmentId", "EnvironmentId", spawnLocations.EnvironmentId);
+
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                         .Select(e => string.IsNullOrEmpty(e.ErrorMessage) ? (e.Exception?.Message ?? "unknown") : e.ErrorMessage)
+                                         .ToList();
+            if (errors.Any()) ModelState.AddModelError("", string.Join(" | ", errors));
+
+            ViewData["AnimalId"] = new SelectList(_context.Animals, "AnimalId", "Name", spawnLocations.AnimalId);
             return View(spawnLocations);
         }
 
         // GET: SpawnLocations/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var spawnLocations = await _context.SpawnLocations
                 .Include(s => s.Animal)
-                .Include(s => s.Environment)
+                .ThenInclude(a => a.Environment)
                 .FirstOrDefaultAsync(m => m.SpawnLocationId == id);
-            if (spawnLocations == null)
-            {
-                return NotFound();
-            }
+            if (spawnLocations == null) return NotFound();
 
             return View(spawnLocations);
         }
@@ -157,9 +154,9 @@ namespace Final_Project_Backend.Controllers
             if (spawnLocations != null)
             {
                 _context.SpawnLocations.Remove(spawnLocations);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
