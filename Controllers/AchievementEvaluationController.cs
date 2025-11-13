@@ -199,11 +199,18 @@ namespace Final_Project_Backend.Controllers
 
                                     if (aId != null)
                                     {
-                                        var totalInfo = await GetTotalInfoTypesForAnimalAsync(aId.Value);
+                                        // Use required canonical keys (excludes optional imageUrl)
+                                        var animal = await _context.Animals.FindAsync(aId.Value);
+                                        var requiredKeys = animal == null ? Array.Empty<string>() : GetRequiredCanonicalKeysForAnimal(animal);
+                                        var totalRequired = requiredKeys.Length;
+
                                         var unlockedForAnimal = await GetUnlockedKeysForUserAnimalAsync(evt.UserId, aId.Value);
-                                        var unlockedCountLocal = unlockedForAnimal.Count(k => CanonicalInfoKeys.Contains(k));
-                                        Debug.WriteLine($"[Eval]   UnlockedAllInfoForAnimal (specific) => target={aId} totalInfo={totalInfo} unlocked={unlockedCountLocal}");
-                                        if (totalInfo == 0 || unlockedCountLocal < totalInfo) meets = false;
+                                        var unlockedCountLocal = unlockedForAnimal.Count(k => requiredKeys.Contains(k));
+                                        Debug.WriteLine($"[Eval]   UnlockedAllInfoForAnimal (specific) => target={aId} totalRequired={totalRequired} unlocked={unlockedCountLocal}");
+                                        Debug.WriteLine($"[Eval]   required keys: {string.Join(", ", requiredKeys.OrderBy(k => k))}");
+                                        Debug.WriteLine($"[Eval]   unlocked keys for specific animal {aId}: {string.Join(", ", unlockedForAnimal.OrderBy(k => k))}");
+
+                                        if (totalRequired == 0 || unlockedCountLocal < totalRequired) meets = false;
                                     }
                                     else
                                     {
@@ -211,12 +218,16 @@ namespace Final_Project_Backend.Controllers
                                         bool anyFully = false;
                                         foreach (var animal in animals)
                                         {
-                                            var totalInfo = CountInfoFieldsOnAnimal(animal);
-                                            if (totalInfo == 0) continue;
+                                            var requiredKeys = GetRequiredCanonicalKeysForAnimal(animal);
+                                            var totalRequired = requiredKeys.Length;
+                                            if (totalRequired == 0) continue;
+
                                             var unlocked = await GetUnlockedKeysForUserAnimalAsync(evt.UserId, animal.AnimalId);
-                                            var unlockedCountLocal = unlocked.Count(k => CanonicalInfoKeys.Contains(k));
-                                            Debug.WriteLine($"[Eval]   UnlockedAllInfoForAnimal (any) => animal={animal.AnimalId} totalInfo={totalInfo} unlocked={unlockedCountLocal}");
-                                            if (unlockedCountLocal >= totalInfo) { anyFully = true; break; }
+                                            var unlockedCountLocal = unlocked.Count(k => requiredKeys.Contains(k));
+                                            Debug.WriteLine($"[Eval]   UnlockedAllInfoForAnimal (any) => animal={animal.AnimalId} totalRequired={totalRequired} unlocked={unlockedCountLocal}");
+                                            Debug.WriteLine($"[Eval]   required keys for animal {animal.AnimalId}: {string.Join(", ", requiredKeys.OrderBy(k => k))}");
+                                            Debug.WriteLine($"[Eval]   unlocked keys for animal {animal.AnimalId}: {string.Join(", ", unlocked.OrderBy(k => k))}");
+                                            if (unlockedCountLocal >= totalRequired) { anyFully = true; break; }
                                         }
                                         if (!anyFully) meets = false;
                                     }
@@ -439,6 +450,22 @@ namespace Final_Project_Backend.Controllers
             var animal = await _context.Animals.FindAsync(animalId);
             if (animal == null) return 0;
             return CountInfoFieldsOnAnimal(animal);
+        }
+
+        // Helper: canonical required keys for the "all info for an animal" achievement.
+        // Deliberately exclude optional keys (like imageUrl) that shouldn't block the achievement.
+        private static string[] GetRequiredCanonicalKeysForAnimal(Animals a)
+        {
+            var list = new List<string>();
+            if (!string.IsNullOrWhiteSpace(a.Name)) list.Add("name");
+            if (!string.IsNullOrWhiteSpace(a.MaoriName)) list.Add("maoriName");
+            if (!string.IsNullOrWhiteSpace(a.ScientificName)) list.Add("scientificName");
+            if (!string.IsNullOrWhiteSpace(a.AverageSize)) list.Add("averageSize");
+            if (!string.IsNullOrWhiteSpace(a.Habitat)) list.Add("habitat");
+            if (!string.IsNullOrWhiteSpace(a.Diet)) list.Add("diet");
+            if (!string.IsNullOrWhiteSpace(a.Origin)) list.Add("origin");
+            // Note: intentionally not adding "imageUrl" — images are optional and do not block this achievement.
+            return list.ToArray();
         }
     }
 }

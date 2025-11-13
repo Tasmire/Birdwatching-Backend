@@ -67,7 +67,14 @@
                 @Html.DisplayFor(modelItem => item.Origin)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ImageUrl)
+                @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                {
+                    <img src="@(Url.Content("~/img/animals/" + item.ImageUrl))" alt="thumb" style="max-width:60px;max-height:60px;" />
+                }
+                else
+                {
+                    <span class="text-muted">—</span>
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Environment.Name)

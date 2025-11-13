@@ -20,8 +20,9 @@ namespace Final_Project_Backend.Models
         public string? Diet { get; set; }
         public string? Origin { get; set; }
 
-        [Display(Name = "Image URL")]
+        [Display(Name = "Image File")]
         public string? ImageUrl { get; set; }
+        [Display(Name = "Environment")]
         public Guid EnvironmentId { get; set; }
         public Environments? Environment { get; set; }
         public ICollection<SpawnLocations> SpawnLocations { get; set; } = new List<SpawnLocations>();

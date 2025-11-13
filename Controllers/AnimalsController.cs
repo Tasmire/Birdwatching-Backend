@@ -4,8 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,7 +18,13 @@ namespace Final_Project_Backend.Controllers
     public class AnimalsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public AnimalsController(ApplicationDbContext context) => _context = context;
+        private readonly IWebHostEnvironment _env;
+
+        public AnimalsController(ApplicationDbContext context, IWebHostEnvironment env)
+        {
+            _context = context;
+            _env = env;
+        }
 
         // GET: Animals
         public async Task<IActionResult> Index()
@@ -27,18 +36,12 @@ namespace Final_Project_Backend.Controllers
         // GET: Animals/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var animals = await _context.Animals
                 .Include(a => a.Environment)
                 .FirstOrDefaultAsync(m => m.AnimalId == id);
-            if (animals == null)
-            {
-                return NotFound();
-            }
+            if (animals == null) return NotFound();
 
             return View(animals);
         }
@@ -57,13 +60,21 @@ namespace Final_Project_Backend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Animals animals, List<Guid>? selectedSpawnIds)
+        public async Task<IActionResult> Create(Animals animals, List<Guid>? selectedSpawnIds, IFormFile? imageFile)
         {
             if (ModelState.IsValid)
             {
+                // handle image upload
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    var savedFileName = await SaveImageFileAsync(imageFile);
+                    if (!string.IsNullOrEmpty(savedFileName)) animals.ImageUrl = savedFileName; // store filename only
+                }
+
                 // attach selected spawns
                 if (selectedSpawnIds != null)
                 {
+                    animals.SpawnLocations ??= new List<SpawnLocations>();
                     foreach (var id in selectedSpawnIds.Distinct())
                     {
                         var spawn = await _context.SpawnLocations.FindAsync(id);
@@ -106,7 +117,7 @@ namespace Final_Project_Backend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, Animals animals, List<Guid>? selectedSpawnIds)
+        public async Task<IActionResult> Edit(Guid id, Animals animals, List<Guid>? selectedSpawnIds, IFormFile? imageFile)
         {
             if (id != animals.AnimalId) return NotFound();
 
@@ -114,14 +125,34 @@ namespace Final_Project_Backend.Controllers
             {
                 try
                 {
-                    // load existing entity including navigation
                     var animalToUpdate = await _context.Animals
                         .Include(a => a.SpawnLocations)
                         .FirstOrDefaultAsync(a => a.AnimalId == id);
 
                     if (animalToUpdate == null) return NotFound();
 
-                    // update scalar props (you can be selective or use TryUpdateModelAsync)
+                    // handle new image file (remove old file if exists)
+                    if (imageFile != null && imageFile.Length > 0)
+                    {
+                        // delete old file if present in wwwroot/img/animals
+                        if (!string.IsNullOrWhiteSpace(animalToUpdate.ImageUrl))
+                        {
+                            var existingPath = Path.Combine(_env.WebRootPath ?? "wwwroot", "img", "animals", animalToUpdate.ImageUrl);
+                            if (System.IO.File.Exists(existingPath))
+                            {
+                                try { System.IO.File.Delete(existingPath); } catch { /* ignore deletion errors */ }
+                            }
+                        }
+
+                        var savedFileName = await SaveImageFileAsync(imageFile);
+                        if (!string.IsNullOrEmpty(savedFileName)) animalToUpdate.ImageUrl = savedFileName; // store filename only
+                    }
+                    else
+                    {
+                        // preserve animalToUpdate.ImageUrl
+                    }
+
+                    // update scalar props
                     animalToUpdate.Name = animals.Name;
                     animalToUpdate.MaoriName = animals.MaoriName;
                     animalToUpdate.ScientificName = animals.ScientificName;
@@ -129,7 +160,6 @@ namespace Final_Project_Backend.Controllers
                     animalToUpdate.Habitat = animals.Habitat;
                     animalToUpdate.Diet = animals.Diet;
                     animalToUpdate.Origin = animals.Origin;
-                    animalToUpdate.ImageUrl = animals.ImageUrl;
                     animalToUpdate.EnvironmentId = animals.EnvironmentId;
 
                     // update many-to-many: clear and re-add selected
@@ -162,18 +192,12 @@ namespace Final_Project_Backend.Controllers
         // GET: Animals/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var animals = await _context.Animals
                 .Include(a => a.Environment)
                 .FirstOrDefaultAsync(m => m.AnimalId == id);
-            if (animals == null)
-            {
-                return NotFound();
-            }
+            if (animals == null) return NotFound();
 
             return View(animals);
         }
@@ -186,6 +210,16 @@ namespace Final_Project_Backend.Controllers
             var animals = await _context.Animals.FindAsync(id);
             if (animals != null)
             {
+                // delete image from disk if present
+                if (!string.IsNullOrWhiteSpace(animals.ImageUrl))
+                {
+                    var existingPath = Path.Combine(_env.WebRootPath ?? "wwwroot", "img", "animals", animals.ImageUrl);
+                    if (System.IO.File.Exists(existingPath))
+                    {
+                        try { System.IO.File.Delete(existingPath); } catch { /* ignore deletion errors */ }
+                    }
+                }
+
                 _context.Animals.Remove(animals);
             }
 
@@ -196,6 +230,26 @@ namespace Final_Project_Backend.Controllers
         private bool AnimalsExists(Guid id)
         {
             return _context.Animals.Any(e => e.AnimalId == id);
+        }
+
+        private async Task<string> SaveImageFileAsync(IFormFile file)
+        {
+            if (file == null || file.Length == 0) return string.Empty;
+
+            var uploadsFolder = Path.Combine(_env.WebRootPath ?? "wwwroot", "img", "animals");
+            if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+
+            var ext = Path.GetExtension(file.FileName);
+            var fileName = $"{Guid.NewGuid()}{ext}";
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // return filename only (DB stores only filename)
+            return fileName;
         }
     }
 }

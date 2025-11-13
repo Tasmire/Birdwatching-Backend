@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="AnimalId" />
             <div class="form-group">
@@ -49,9 +49,16 @@
                 <span asp-validation-for="Origin" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ImageUrl" class="control-label"></label>
-                <input asp-for="ImageUrl" class="form-control" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                <label asp-for="ImageUrl" class="control-label">Current image</label>
+                @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+                {
+                    <div>
+                        <img src="@(Url.Content("~/img/animals/" + Model.ImageUrl))" alt="animal image" style="max-width:200px;max-height:200px;" />
+                    </div>
+                }
+                <label class="control-label">Replace image (optional)</label>
+                <input type="file" name="imageFile" accept="image/*" class="form-control-file" />
+                <small class="form-text text-muted">Upload a new image to replace existing. Stored at wwwroot/img/animals</small>
             </div>
             <div class="form-group">
                 <label asp-for="EnvironmentId" class="control-label"></label>

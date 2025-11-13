@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -48,9 +48,15 @@
                 <span asp-validation-for="Origin" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ImageUrl" class="control-label"></label>
-                <input asp-for="ImageUrl" class="form-control" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                <label asp-for="ImageUrl" class="control-label">Image (optional)</label>
+                @if (!string.IsNullOrWhiteSpace(Model?.ImageUrl))
+                {
+                    <div>
+                        <img src="@(Url.Content("~/img/animals/" + Model.ImageUrl))" alt="animal image" style="max-width:200px;max-height:200px;" />
+                    </div>
+                }
+                <input type="file" name="imageFile" accept="image/*" class="form-control-file" />
+                <small class="form-text text-muted">Uploaded image will be stored in wwwroot/img/animals</small>
             </div>
             <div class="form-group">
                 <label asp-for="EnvironmentId" class="control-label"></label>
