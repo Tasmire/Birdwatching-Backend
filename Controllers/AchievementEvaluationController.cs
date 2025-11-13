@@ -1,5 +1,6 @@
 using Final_Project_Backend.Data;
 using Final_Project_Backend.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Final_Project_Backend.Controllers
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class AchievementEvaluationController : ControllerBase
