@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Final_Project_Backend.Data;
 using Final_Project_Backend.Models;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace Final_Project_Backend.Controllers
 {
@@ -23,9 +24,15 @@ namespace Final_Project_Backend.Controllers
 
         // GET: api/UserAchievementsAPI
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserAchievements>>> GetUserAchievements()
+        public async Task<ActionResult<IEnumerable<UserAchievements>>> GetUserAchievements([FromQuery] Guid? userId)
         {
-            return await _context.UserAchievements.ToListAsync();
+            if (userId.HasValue)
+            {
+                return await _context.UserAchievements
+                    .Where(ua => ua.UserId == userId.Value)
+                    .ToListAsync();
+            }
+             return await _context.UserAchievements.ToListAsync();
         }
 
         // GET: api/UserAchievementsAPI/5

@@ -5,7 +5,7 @@
         public Guid UserId { get; set; }
 
         public Guid AnimalId { get; set; }
-        public string InfoType { get; set; } = null!;
+        public string? InfoType { get; set; }
 
         public bool IsUnlocked { get; set; } = true;
     }

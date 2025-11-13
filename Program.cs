@@ -91,6 +91,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddAuthorization();
 
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -170,5 +173,8 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
+
+
+await AchievementCriteriaSeeder.SeedAsync(app.Services);
 
 app.Run();
