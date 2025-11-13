@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Final_Project_Backend.Data;
+using Final_Project_Backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Final_Project_Backend.Data;
-using Final_Project_Backend.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Final_Project_Backend.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -34,7 +36,7 @@ namespace Final_Project_Backend.Controllers
             }
 
             var users = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserId == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (users == null)
             {
                 return NotFound();
@@ -54,11 +56,11 @@ namespace Final_Project_Backend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,Username,Email,PasswordHash")] Users users)
+        public async Task<IActionResult> Create([Bind("Id,UserName,Email,PasswordHash")] Users users)
         {
             if (ModelState.IsValid)
             {
-                users.UserId = Guid.NewGuid();
+                users.Id = Guid.NewGuid();
                 _context.Add(users);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -87,9 +89,9 @@ namespace Final_Project_Backend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("UserId,Username,Email,PasswordHash")] Users users)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,UserName,Email,PasswordHash")] Users users)
         {
-            if (id != users.UserId)
+            if (id != users.Id)
             {
                 return NotFound();
             }
@@ -103,7 +105,7 @@ namespace Final_Project_Backend.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UsersExists(users.UserId))
+                    if (!UsersExists(users.Id))
                     {
                         return NotFound();
                     }
@@ -126,7 +128,7 @@ namespace Final_Project_Backend.Controllers
             }
 
             var users = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserId == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (users == null)
             {
                 return NotFound();
@@ -152,7 +154,7 @@ namespace Final_Project_Backend.Controllers
 
         private bool UsersExists(Guid id)
         {
-            return _context.Users.Any(e => e.UserId == id);
+            return _context.Users.Any(e => e.Id == id);
         }
     }
 }

@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Final_Project_Backend.Data;
+using Final_Project_Backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Final_Project_Backend.Data;
-using Final_Project_Backend.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Environments = Final_Project_Backend.Models.Environments;
 
 namespace Final_Project_Backend.Controllers
 {
+    [Authorize(Roles = "Staff, Admin")]
     public class EnvironmentsController : Controller
     {
         private readonly ApplicationDbContext _context;

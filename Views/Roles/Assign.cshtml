@@ -1,0 +1,30 @@
+﻿@model Final_Project_Backend.Models.RolesAssignViewModel
+
+@{
+    ViewData["Title"] = "Assign Role";
+}
+
+<h2>Assign Role to User</h2>
+
+<form asp-action="Assign" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="UserId" class="form-label"></label>
+        <select asp-for="UserId" asp-items="Model.Users" class="form-select"></select>
+        <span asp-validation-for="UserId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SelectedRoles" class="form-label">Roles</label>
+        <select asp-for="SelectedRoles" asp-items="Model.Roles" class="form-select" multiple="multiple" size="6"></select>
+        <span asp-validation-for="SelectedRoles" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Assign</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

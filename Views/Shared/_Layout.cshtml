@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Final_Project_Backend.Models
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<Users> UserManager
+@inject SignInManager<Users> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -41,6 +46,12 @@
                             <a class="nav-link text-light" asp-area="" asp-controller="Users" asp-action="Index">Players</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Achievements" asp-action="Index">Achievements</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="SpawnLocations" asp-action="Index">Spawn Locations</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Roles" asp-action="Index">Roles</a>
                         </li>
                     </ul>
@@ -61,6 +72,7 @@
                 <img src="~/img/bird-small-light.png" height="35" width="35" border="0" class="me-2" />
                 Birdwatching
             </p>
+            <a class="text-light" href="https://www.flaticon.com/free-icons/zone" title="zone icons">Icons created by Irfansusanto20 - Flaticon</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

@@ -111,7 +111,8 @@ namespace Final_Project_Backend.Controllers
 
         private bool UsersExists(Guid id)
         {
-            return _context.Users.Any(e => e.UserId == id);
+            // use mapped property 'Id' (not the NotMapped wrapper 'UserId')
+            return _context.Users.Any(e => e.Id == id);
         }
 
         // POST: api/UsersAPI/register
@@ -121,8 +122,8 @@ namespace Final_Project_Backend.Controllers
             if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password) || string.IsNullOrWhiteSpace(request.Email))
                 return BadRequest("Username, email and password are required.");
 
-            // check uniqueness
-            if (await _context.Users.AnyAsync(u => u.Username == request.Username))
+            // check uniqueness — use mapped UserName (not the NotMapped wrapper Username)
+            if (await _context.Users.AnyAsync(u => u.UserName == request.Username))
                 return Conflict("Username already taken.");
             if (await _context.Users.AnyAsync(u => u.Email == request.Email))
                 return Conflict("Email already registered.");
@@ -130,7 +131,8 @@ namespace Final_Project_Backend.Controllers
             var user = new Users
             {
                 UserId = Guid.NewGuid(),
-                Username = request.Username,
+                // set mapped property
+                UserName = request.Username,
                 Email = request.Email
             };
 
@@ -153,7 +155,7 @@ namespace Final_Project_Backend.Controllers
                 return BadRequest("Username/email and password are required.");
 
             var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Username == request.UsernameOrEmail || u.Email == request.UsernameOrEmail);
+                .FirstOrDefaultAsync(u => u.UserName == request.UsernameOrEmail || u.Email == request.UsernameOrEmail);
 
             if (user == null)
                 return Unauthorized("Invalid credentials.");

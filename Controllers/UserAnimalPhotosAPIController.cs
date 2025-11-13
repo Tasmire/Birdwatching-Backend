@@ -23,9 +23,22 @@ namespace Final_Project_Backend.Controllers
 
         // GET: api/UserAnimalPhotosAPI
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserAnimalPhotos>>> GetUserAnimalPhotos()
+        public async Task<ActionResult<IEnumerable<UserAnimalPhotos>>> GetUserAnimalPhotos([FromQuery] Guid? userId, [FromQuery] Guid? animalId)
         {
-            return await _context.UserAnimalPhotos.ToListAsync();
+            // build queryable and apply optional filters
+            var query = _context.UserAnimalPhotos.AsQueryable();
+
+            if (userId.HasValue && userId != Guid.Empty)
+            {
+                query = query.Where(p => p.UserId == userId.Value);
+            }
+
+            if (animalId.HasValue && animalId != Guid.Empty)
+            {
+                query = query.Where(p => p.AnimalId == animalId.Value);
+            }
+
+            return await query.ToListAsync();
         }
 
         // GET: api/UserAnimalPhotosAPI/5

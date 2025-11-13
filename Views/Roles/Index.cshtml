@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Final_Project_Backend.Models.RoleInfoViewModel>
+
+@{
+    ViewData["Title"] = "Roles";
+}
+
+<h2>Roles</h2>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Create Role</a>
+    <a class="btn btn-secondary" asp-action="Assign">Assign Role to User</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Role</th>
+            <th>Members</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.RoleName</td>
+                <td>@r.MemberCount</td>
+                <td>
+                    <!-- Optionally link to list of users in role -->
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

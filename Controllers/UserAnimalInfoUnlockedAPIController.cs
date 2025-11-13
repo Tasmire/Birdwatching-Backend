@@ -91,7 +91,8 @@ namespace Final_Project_Backend.Controllers
                 UnlockId = Guid.NewGuid(),
                 UserId = dto.UserId,
                 AnimalId = dto.AnimalId,
-                InfoType = dto.InfoType
+                InfoType = dto.InfoType,
+                IsUnlocked = dto.IsUnlocked
             };
 
             _context.UserAnimalInfoUnlocked.Add(entity);

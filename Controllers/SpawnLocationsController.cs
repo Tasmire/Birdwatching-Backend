@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Final_Project_Backend.Data;
+using Final_Project_Backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Final_Project_Backend.Data;
-using Final_Project_Backend.Models;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Final_Project_Backend.Controllers
 {
+    [Authorize(Roles = "Staff, Admin")]
     public class SpawnLocationsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -24,7 +26,7 @@ namespace Final_Project_Backend.Controllers
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.SpawnLocations
-                .Include(s => s.Animal)
+                .Include(s => s.Animals)
                 .ThenInclude(a => a.Environment);
             return View(await applicationDbContext.ToListAsync());
         }
@@ -35,7 +37,7 @@ namespace Final_Project_Backend.Controllers
             if (id == null) return NotFound();
 
             var spawnLocations = await _context.SpawnLocations
-                .Include(s => s.Animal)
+                .Include(s => s.Animals)
                 .ThenInclude(a => a.Environment)
                 .FirstOrDefaultAsync(m => m.SpawnLocationId == id);
             if (spawnLocations == null) return NotFound();
@@ -46,7 +48,7 @@ namespace Final_Project_Backend.Controllers
         // GET: SpawnLocations/Create
         public IActionResult Create()
         {
-            ViewData["AnimalId"] = new SelectList(_context.Animals, "AnimalId", "Name");
+            ViewData["AnimalId"] = new MultiSelectList(_context.Animals.OrderBy(a => a.Name).ToList(), "AnimalId", "Name");
             return View();
         }
 
@@ -54,13 +56,24 @@ namespace Final_Project_Backend.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SpawnLocationId,Name,SpawnType,XCoordinate,YCoordinate,Scale,AnimalId")] SpawnLocations spawnLocations)
+        public async Task<IActionResult> Create([Bind("SpawnLocationId,Name,SpawnType,XCoordinate,YCoordinate,Scale")] SpawnLocations spawnLocations, List<Guid>? selectedAnimalIds)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
                     spawnLocations.SpawnLocationId = Guid.NewGuid();
+
+                    // attach selected animals (many-to-many)
+                    if (selectedAnimalIds != null && selectedAnimalIds.Any())
+                    {
+                        foreach (var aid in selectedAnimalIds.Distinct())
+                        {
+                            var animal = await _context.Animals.FindAsync(aid);
+                            if (animal != null) spawnLocations.Animals.Add(animal);
+                        }
+                    }
+
                     _context.Add(spawnLocations);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -83,8 +96,8 @@ namespace Final_Project_Backend.Controllers
                 ModelState.AddModelError("", combined);
             }
 
-            // repopulate select lists
-            ViewData["AnimalId"] = new SelectList(_context.Animals, "AnimalId", "Name", spawnLocations?.AnimalId);
+            // repopulate select lists (MultiSelectList)
+            ViewData["AnimalId"] = new MultiSelectList(_context.Animals.OrderBy(a => a.Name).ToList(), "AnimalId", "Name", selectedAnimalIds);
             return View(spawnLocations);
         }
 
@@ -93,17 +106,20 @@ namespace Final_Project_Backend.Controllers
         {
             if (id == null) return NotFound();
 
-            var spawnLocations = await _context.SpawnLocations.FindAsync(id);
+            var spawnLocations = await _context.SpawnLocations
+                .Include(s => s.Animals)
+                .FirstOrDefaultAsync(s => s.SpawnLocationId == id);
             if (spawnLocations == null) return NotFound();
 
-            ViewData["AnimalId"] = new SelectList(_context.Animals, "AnimalId", "Name", spawnLocations.AnimalId);
+            var selected = spawnLocations.Animals.Select(a => a.AnimalId).ToList();
+            ViewData["AnimalId"] = new MultiSelectList(_context.Animals.OrderBy(a => a.Name).ToList(), "AnimalId", "Name", selected);
             return View(spawnLocations);
         }
 
         // POST: SpawnLocations/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("SpawnLocationId,Name,SpawnType,XCoordinate,YCoordinate,Scale,AnimalId")] SpawnLocations spawnLocations)
+        public async Task<IActionResult> Edit(Guid id, [Bind("SpawnLocationId,Name,SpawnType,XCoordinate,YCoordinate,Scale")] SpawnLocations spawnLocations, List<Guid>? selectedAnimalIds)
         {
             if (id != spawnLocations.SpawnLocationId) return NotFound();
 
@@ -111,7 +127,31 @@ namespace Final_Project_Backend.Controllers
             {
                 try
                 {
-                    _context.Update(spawnLocations);
+                    // load existing entity including navigation
+                    var spawnToUpdate = await _context.SpawnLocations
+                        .Include(s => s.Animals)
+                        .FirstOrDefaultAsync(s => s.SpawnLocationId == id);
+
+                    if (spawnToUpdate == null) return NotFound();
+
+                    // update scalar props
+                    spawnToUpdate.Name = spawnLocations.Name;
+                    spawnToUpdate.SpawnType = spawnLocations.SpawnType;
+                    spawnToUpdate.XCoordinate = spawnLocations.XCoordinate;
+                    spawnToUpdate.YCoordinate = spawnLocations.YCoordinate;
+                    spawnToUpdate.Scale = spawnLocations.Scale;
+
+                    // update many-to-many: clear and re-add selected
+                    spawnToUpdate.Animals.Clear();
+                    if (selectedAnimalIds != null && selectedAnimalIds.Any())
+                    {
+                        foreach (var aid in selectedAnimalIds.Distinct())
+                        {
+                            var animal = await _context.Animals.FindAsync(aid);
+                            if (animal != null) spawnToUpdate.Animals.Add(animal);
+                        }
+                    }
+
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -127,7 +167,7 @@ namespace Final_Project_Backend.Controllers
                                          .ToList();
             if (errors.Any()) ModelState.AddModelError("", string.Join(" | ", errors));
 
-            ViewData["AnimalId"] = new SelectList(_context.Animals, "AnimalId", "Name", spawnLocations.AnimalId);
+            ViewData["AnimalId"] = new MultiSelectList(_context.Animals.OrderBy(a => a.Name).ToList(), "AnimalId", "Name", selectedAnimalIds);
             return View(spawnLocations);
         }
 
@@ -137,7 +177,7 @@ namespace Final_Project_Backend.Controllers
             if (id == null) return NotFound();
 
             var spawnLocations = await _context.SpawnLocations
-                .Include(s => s.Animal)
+                .Include(s => s.Animals)
                 .ThenInclude(a => a.Environment)
                 .FirstOrDefaultAsync(m => m.SpawnLocationId == id);
             if (spawnLocations == null) return NotFound();

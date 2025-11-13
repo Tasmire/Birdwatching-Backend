@@ -25,7 +25,20 @@ namespace Final_Project_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SpawnLocations>>> GetSpawnLocations()
         {
-            return await _context.SpawnLocations.ToListAsync();
+            var list = await _context.SpawnLocations
+        .Include(s => s.Animals) // ensure EF loads the relation
+        .Select(s => new {
+            s.SpawnLocationId,
+            s.Name,
+            s.SpawnType,
+            s.XCoordinate,
+            s.YCoordinate,
+            s.Scale,
+            Animals = s.Animals.Select(a => a.AnimalId).ToList() // send IDs only
+        })
+        .ToListAsync();
+
+            return Ok(list);
         }
 
         // GET: api/SpawnLocationsAPI/5

@@ -57,6 +57,10 @@
                 <select asp-for="EnvironmentId" class ="form-control" asp-items="ViewBag.EnvironmentId"></select>
             </div>
             <div class="form-group">
+                <label>Spawn Locations</label>
+                <select asp-items="ViewBag.SpawnLocationIds" name="selectedSpawnIds" multiple="multiple" class="form-control"></select>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>

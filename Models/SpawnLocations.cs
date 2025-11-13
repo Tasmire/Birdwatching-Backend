@@ -17,7 +17,6 @@ namespace Final_Project_Backend.Models
         [Display(Name = "Y Coordinate")]
         public float YCoordinate { get; set; }
         public float Scale { get; set; }
-        public Guid AnimalId { get; set; }
-        public Animals? Animal { get; set; } 
+        public ICollection<Animals> Animals { get; set; } = new List<Animals>();
     }
 }

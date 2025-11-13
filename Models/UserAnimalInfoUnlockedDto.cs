@@ -7,6 +7,6 @@
         public Guid AnimalId { get; set; }
         public string InfoType { get; set; } = null!;
 
-        public bool IsUnlocked { get; set; }
+        public bool IsUnlocked { get; set; } = true;
     }
 }
