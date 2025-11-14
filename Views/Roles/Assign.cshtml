@@ -4,18 +4,18 @@
     ViewData["Title"] = "Assign Role";
 }
 
-<h2>Assign Role to User</h2>
+<h2 class="crud-page-title">Assign Role to User</h2>
 
 <form asp-action="Assign" method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
 
-    <div class="mb-3">
+    <div class="mb-3 crud-input">
         <label asp-for="UserId" class="form-label"></label>
         <select asp-for="UserId" asp-items="Model.Users" class="form-select"></select>
         <span asp-validation-for="UserId" class="text-danger"></span>
     </div>
 
-    <div class="mb-3">
+    <div class="mb-3 crud-input">
         <label asp-for="SelectedRoles" class="form-label">Roles</label>
         <select asp-for="SelectedRoles" asp-items="Model.Roles" class="form-select" multiple="multiple" size="6"></select>
         <span asp-validation-for="SelectedRoles" class="text-danger"></span>

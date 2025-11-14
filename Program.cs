@@ -41,24 +41,29 @@ builder.Services.AddSwaggerGen();
 var jwtKey = builder.Configuration["Jwt:Key"];
 if (!string.IsNullOrWhiteSpace(jwtKey))
 {
-    // Register the JwtBearer handler but do NOT overwrite the default authentication scheme
-    // so cookie-based Identity authentication continues to work for the Razor UI.
-    builder.Services.AddAuthentication()
-        .AddJwtBearer(options =>
+    // Ensure the Identity cookie scheme remains the default for UI, and register JWT as an additional handler.
+    builder.Services.AddAuthentication(options =>
+    {
+        // keep Identity cookie as defaults so Razor UI continues to work with roles
+        options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Identity.IdentityConstants.ApplicationScheme;
+        options.DefaultSignInScheme = Microsoft.AspNetCore.Identity.IdentityConstants.ApplicationScheme;
+        options.DefaultChallengeScheme = Microsoft.AspNetCore.Identity.IdentityConstants.ApplicationScheme;
+    })
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
         {
-            options.RequireHttpsMetadata = false;
-            options.SaveToken = true;
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = !string.IsNullOrWhiteSpace(builder.Configuration["Jwt:Issuer"]),
-                ValidateAudience = !string.IsNullOrWhiteSpace(builder.Configuration["Jwt:Audience"]),
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = builder.Configuration["Jwt:Issuer"],
-                ValidAudience = builder.Configuration["Jwt:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
-            };
-        });
+            ValidateIssuer = !string.IsNullOrWhiteSpace(builder.Configuration["Jwt:Issuer"]),
+            ValidateAudience = !string.IsNullOrWhiteSpace(builder.Configuration["Jwt:Audience"]),
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtKey))
+        };
+    });
 }
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -161,17 +166,17 @@ using (var scope = app.Services.CreateScope())
     }
 
     // optional: seed an admin user
-    var adminEmail = "admin@example.com";
-    var admin = await userManager.FindByEmailAsync(adminEmail);
-    if (admin == null)
-    {
-        admin = new Users { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true, Id = Guid.NewGuid() };
-        var pwRes = await userManager.CreateAsync(admin, "P@ssw0rd!");
-        if (pwRes.Succeeded)
-        {
-            await userManager.AddToRoleAsync(admin, adminRole);
-        }
-    }
+    //var adminEmail = "admin@example.com";
+    //var admin = await userManager.FindByEmailAsync(adminEmail);
+    //if (admin == null)
+    //{
+    //    admin = new Users { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true, Id = Guid.NewGuid() };
+    //    var pwRes = await userManager.CreateAsync(admin, "P@ssw0rd!");
+    //    if (pwRes.Succeeded)
+    //    {
+    //        await userManager.AddToRoleAsync(admin, adminRole);
+    //    }
+    //}
 }
 
 

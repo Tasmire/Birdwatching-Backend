@@ -114,6 +114,12 @@ namespace Final_Project_Backend.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                // Auto-confirm email when the app is configured to not require confirmed accounts
+                // This avoids needing to click confirmation links during development
+                if (!_userManager.Options.SignIn.RequireConfirmedAccount)
+                {
+                    user.EmailConfirmed = true;
+                }
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)

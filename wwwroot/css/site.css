@@ -122,10 +122,81 @@ body {
     text-align: center;
 }
 
+.crud-input input, .crud-input select {
+    background-color: #CDD7CA;
+    border-color: #112C09;
+    border-width: 2px;
+    margin-bottom: 12px;
+}
+
+.crud-input input:active, .crud-input input:focus, .crud-input select:active, .crud-input select:focus {
+    background-color: #EBF4E8;
+    border-color: #112C09;
+}
+
+.crud-input option:checked {
+    background-color: #9DBE93;
+}
+
+.crud-submit {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.crud-link {
+    color: #112C09;
+}
+
+.account-title {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.account-form {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.account-subtitle {
+    text-align: center;
+}
+
+.account-input input {
+    background-color: #CDD7CA;
+    border-color: #112C09;
+    border-width: 2px;
+    margin-bottom: 12px;
+}
+
+.account-input input:active, .account-input input:focus {
+    background-color: #EBF4E8;
+    border-color: #112C09;
+}
+
+.account-submit {
+    margin-bottom: 16px;
+}
+
+.account-link {
+    color: #112C09;
+}
+
 .footer {
     background-color: #4A5348;
 }
 
 .footer p {
     margin-top: 20px;
+}
+
+.btn-primary {
+    background-color: #356227 !important;
+    border-color: #112C09 !important;
+    color: #d7e7d2 !important;
+}
+
+.btn-secondary {
+    background-color: #4A5348 !important;
+    border-color: #112C09 !important;
+    color: #D7E7D2 !important;
 }

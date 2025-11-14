@@ -9,40 +9,40 @@
 <h4 class="crud-page-subtitle">Animals</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-5 crud-form">
         <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group crud-input">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group crud-input">
                 <label asp-for="MaoriName" class="control-label"></label>
                 <input asp-for="MaoriName" class="form-control" />
                 <span asp-validation-for="MaoriName" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group crud-input">
                 <label asp-for="ScientificName" class="control-label"></label>
                 <input asp-for="ScientificName" class="form-control" />
                 <span asp-validation-for="ScientificName" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group crud-input">
                 <label asp-for="AverageSize" class="control-label"></label>
                 <input asp-for="AverageSize" class="form-control" />
                 <span asp-validation-for="AverageSize" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group crud-input">
                 <label asp-for="Habitat" class="control-label"></label>
                 <input asp-for="Habitat" class="form-control" />
                 <span asp-validation-for="Habitat" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group crud-input">
                 <label asp-for="Diet" class="control-label"></label>
                 <input asp-for="Diet" class="form-control" />
                 <span asp-validation-for="Diet" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group crud-input">
                 <label asp-for="Origin" class="control-label"></label>
                 <input asp-for="Origin" class="form-control" />
                 <span asp-validation-for="Origin" class="text-danger"></span>
@@ -58,23 +58,23 @@
                 <input type="file" name="imageFile" accept="image/*" class="form-control-file" />
                 <small class="form-text text-muted">Uploaded image will be stored in wwwroot/img/animals</small>
             </div>
-            <div class="form-group">
+            <div class="form-group crud-input">
                 <label asp-for="EnvironmentId" class="control-label"></label>
                 <select asp-for="EnvironmentId" class ="form-control" asp-items="ViewBag.EnvironmentId"></select>
             </div>
-            <div class="form-group">
+            <div class="form-group crud-input">
                 <label>Spawn Locations</label>
                 <select asp-items="ViewBag.SpawnLocationIds" name="selectedSpawnIds" multiple="multiple" class="form-control"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary crud-submit" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="crud-link">Back to List</a>
 </div>
 
 @section Scripts {

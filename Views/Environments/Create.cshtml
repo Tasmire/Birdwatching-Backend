@@ -12,22 +12,22 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group crud-input">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group crud-input">
                 <label asp-for="NavigationIcon" class="control-label"></label>
                 <input asp-for="NavigationIcon" class="form-control" />
                 <span asp-validation-for="NavigationIcon" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group crud-input">
                 <label asp-for="ImageUrl" class="control-label"></label>
                 <input asp-for="ImageUrl" class="form-control" />
                 <span asp-validation-for="ImageUrl" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group crud-submit">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -35,7 +35,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="crud-link">Back to List</a>
 </div>
 
 @section Scripts {

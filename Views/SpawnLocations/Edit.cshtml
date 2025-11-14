@@ -13,32 +13,32 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="SpawnLocationId" />
-            <div class="form-group">
+            <div class="form-group crud-input">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group crud-input">
                 <label asp-for="SpawnType" class="control-label"></label>
                 <input asp-for="SpawnType" class="form-control" />
                 <span asp-validation-for="SpawnType" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group crud-input">
                 <label asp-for="XCoordinate" class="control-label"></label>
                 <input asp-for="XCoordinate" class="form-control" />
                 <span asp-validation-for="XCoordinate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group crud-input">
                 <label asp-for="YCoordinate" class="control-label"></label>
                 <input asp-for="YCoordinate" class="form-control" />
                 <span asp-validation-for="YCoordinate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group crud-input">
                 <label asp-for="Scale" class="control-label"></label>
                 <input asp-for="Scale" class="form-control" />
                 <span asp-validation-for="Scale" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group crud-submit">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -46,7 +46,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="crud-link">Back to List</a>
 </div>
 
 @section Scripts {
