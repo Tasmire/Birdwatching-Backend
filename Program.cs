@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 var CORSAllowSpecificOrigins = "_CORSAllowed";
 var builder = WebApplication.CreateBuilder(args);
+var conn = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: CORSAllowSpecificOrigins,
@@ -22,7 +24,7 @@ builder.Services.AddCors(options =>
 
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
 
 // register Identity with GUID keys and EF stores
 builder.Services.AddIdentity<Users, IdentityRole<Guid>>(options =>

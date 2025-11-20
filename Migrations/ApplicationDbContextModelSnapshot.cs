@@ -4,34 +4,31 @@ using Final_Project_Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Final_Project_Backend.Data.Migrations
+namespace Final_Project_Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251113080356_IdentityMappedToUser")]
-    partial class IdentityMappedToUser
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.10")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("AnimalSpawnLocations", b =>
                 {
                     b.Property<Guid>("AnimalId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("SpawnLocationId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("AnimalId", "SpawnLocationId");
 
@@ -44,20 +41,20 @@ namespace Final_Project_Backend.Data.Migrations
                 {
                     b.Property<Guid>("CriterionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("AchievementId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("CriterionType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("RequiredCount")
                         .HasColumnType("int");
 
                     b.Property<string>("Target")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("CriterionId");
 
@@ -68,17 +65,17 @@ namespace Final_Project_Backend.Data.Migrations
                 {
                     b.Property<Guid>("AchievementId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("IconUrl")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("AchievementId");
 
@@ -89,35 +86,35 @@ namespace Final_Project_Backend.Data.Migrations
                 {
                     b.Property<Guid>("AnimalId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("AverageSize")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Diet")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("EnvironmentId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Habitat")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("MaoriName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Origin")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ScientificName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("AnimalId");
 
@@ -130,17 +127,17 @@ namespace Final_Project_Backend.Data.Migrations
                 {
                     b.Property<Guid>("EnvironmentId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("NavigationIcon")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("EnvironmentId");
 
@@ -151,24 +148,24 @@ namespace Final_Project_Backend.Data.Migrations
                 {
                     b.Property<Guid>("SpawnLocationId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<float>("Scale")
-                        .HasColumnType("real");
+                        .HasColumnType("float");
 
                     b.Property<string>("SpawnType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<float>("XCoordinate")
-                        .HasColumnType("real");
+                        .HasColumnType("float");
 
                     b.Property<float>("YCoordinate")
-                        .HasColumnType("real");
+                        .HasColumnType("float");
 
                     b.HasKey("SpawnLocationId");
 
@@ -179,16 +176,16 @@ namespace Final_Project_Backend.Data.Migrations
                 {
                     b.Property<Guid>("UserAchievementId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("AchievementId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("DateAchieved")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("UserAchievementId");
 
@@ -203,20 +200,20 @@ namespace Final_Project_Backend.Data.Migrations
                 {
                     b.Property<Guid>("UnlockId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("AnimalId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("InfoType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("IsUnlocked")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("UnlockId");
 
@@ -231,20 +228,20 @@ namespace Final_Project_Backend.Data.Migrations
                 {
                     b.Property<Guid>("UserAnimalPhotoId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("AnimalId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("DateUploaded")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("PhotoUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("UserAnimalPhotoId");
 
@@ -259,16 +256,16 @@ namespace Final_Project_Backend.Data.Migrations
                 {
                     b.Property<Guid>("UserAnimalId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("AnimalId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("TimesSpotted")
                         .HasColumnType("int");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("UserAnimalId");
 
@@ -283,7 +280,7 @@ namespace Final_Project_Backend.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("char(36)")
                         .HasColumnName("UserId")
                         .HasAnnotation("Relational:JsonPropertyName", "UserId");
 
@@ -293,63 +290,63 @@ namespace Final_Project_Backend.Data.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("ConcurrencyStamp");
 
                     b.Property<string>("DisplayName")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("DisplayName");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)")
+                        .HasColumnType("varchar(256)")
                         .HasColumnName("Email")
                         .HasAnnotation("Relational:JsonPropertyName", "Email");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit")
+                        .HasColumnType("tinyint(1)")
                         .HasColumnName("EmailConfirmed");
 
                     b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit")
+                        .HasColumnType("tinyint(1)")
                         .HasColumnName("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset")
+                        .HasColumnType("datetime(6)")
                         .HasColumnName("LockoutEnd");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)")
+                        .HasColumnType("varchar(256)")
                         .HasColumnName("NormalizedEmail");
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)")
+                        .HasColumnType("varchar(256)")
                         .HasColumnName("NormalizedUsername");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("PasswordHash");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("PhoneNumber");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit")
+                        .HasColumnType("tinyint(1)")
                         .HasColumnName("PhoneNumberConfirmed");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("SecurityStamp");
 
                     b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)")
+                        .HasColumnType("varchar(256)")
                         .HasColumnName("Username")
                         .HasAnnotation("Relational:JsonPropertyName", "Username");
 
@@ -360,8 +357,7 @@ namespace Final_Project_Backend.Data.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUsername] IS NOT NULL");
+                        .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("Users", (string)null);
                 });
@@ -370,26 +366,25 @@ namespace Final_Project_Backend.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
@@ -400,16 +395,16 @@ namespace Final_Project_Backend.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -424,16 +419,16 @@ namespace Final_Project_Backend.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -445,16 +440,16 @@ namespace Final_Project_Backend.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -466,10 +461,10 @@ namespace Final_Project_Backend.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -481,16 +476,16 @@ namespace Final_Project_Backend.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
